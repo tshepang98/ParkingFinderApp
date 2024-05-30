@@ -1,6 +1,23 @@
 document.addEventListener("DOMContentLoaded", async function() {
-  const apiKey = "v1.public.eyJqdGkiOiJlMTkyMzVkNC01NzIwLTRkNmYtYTI3ZC00OTI2MTVhYjc0ODAifbEbykI4qZvrZz_Xc2Br10tfZzBYwpKWcA4eEyFXNO5fxQ-zRL8E4yq12h0dEqieagY73Ktj6pBZYc07Hiu_ndStV4zHhAFAa8EiDKv4Asfz255TDG8duZ2Utt3855sS2Vq5AVmjDI7F2AWN0gr0n-69DeL4MTeMrWfA4dSDH35gu0GSzl2pxbAqIR0rn2NAJ94J4QzqTycpR54aEhHXxUL5j9nGtwwQ4pyiA0_9jlsSk6KQ4QxSggxYwZDzmbXRxkDCA2y2yJKLVTWtGinB8dB1kSVfrAT80oHKxQh2V8U_o-55oJeoviBzgJbtkf6Xi2w50ndWOMWonMPSO2X8-rk.N2IyNTQ2ODQtOWE1YS00MmI2LTkyOTItMGJlNGMxODU1Mzc2";
-  const apiKeyGeo = "jSdL5KqY7mp6AHbJa0B-AkkfYDjcVIF-PhywwW2YdNs";//api key for HERE endpoint
+  let awsKey;
+  let hereKey;
+  
+  alert("Only available in cape town")
+  //fetch the api key from back-end for security
+  try {
+
+      const response = await fetch("api/apiKeys/");
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      const data = await response.json();
+      awsKey = data.awsKey;
+      hereKey = data.hereKey;
+
+  } catch (error) {
+      console.error('Error fetching the API keys:', error);
+  }
+
   const region = "eu-north-1";
   let map;
   let userLocation = { latitude: 0, longitude: 0 };
@@ -11,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   const setupMap = () => {
     const mapName = "Here-explore";
     map = new maplibregl.Map({
-      style: `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor?key=${apiKey}`,
+      style: `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor?key=${awsKey}`,
       zoom: 2,
       container: 'map'
     });
@@ -34,10 +51,9 @@ document.addEventListener("DOMContentLoaded", async function() {
     geolocate.once('geolocate', (e) => {
       userLocation.latitude = e.coords.latitude;
       userLocation.longitude = e.coords.longitude;
-      console.log('Geolocation successful:', 'latitude = ', userLocation.latitude, 'longitude = ', userLocation.longitude);
+
       // Fetch parking data
       map.flyTo({ center: [userLocation.longitude, userLocation.latitude], zoom: 15 });
-
       fetchParkingSpaces();
     });
     geolocate.on('error', (error) => {
@@ -78,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async function() {
       console.error('Search input is empty');
       return;
     }
-    const urlAutosuggest = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchInput}&apiKey=${apiKeyGeo}`;
+    const urlAutosuggest = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchInput}&apiKey=${hereKey}`;
 
     try {
       const response = await fetch(urlAutosuggest);
@@ -97,8 +113,7 @@ document.addEventListener("DOMContentLoaded", async function() {
       return;
     }
 
-    const apiKeyGeo = "jSdL5KqY7mp6AHbJa0B-AkkfYDjcVIF-PhywwW2YdNs";
-    const urlGeocode = `https://geocode.search.hereapi.com/v1/geocode?q=${searchInput}&apiKey=${apiKeyGeo}`;
+    const urlGeocode = `https://geocode.search.hereapi.com/v1/geocode?q=${searchInput}&apiKey=${hereKey}`;
 
     try {
       const response = await fetch(urlGeocode);
@@ -116,7 +131,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
       // Add user marker
       addUserMarker(coordinates);
-      console.log('searchuserLatitude = ', userLocation.latitude, 'searchLongitude = ', userLocation.longitude)
 
       // Fetch parking spaces data after finding user location
       fetchParkingSpaces();
@@ -158,7 +172,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     });
   };
 
-  // Function to fetch parking spaces data
+  // Function to fetch parking spaces data from cape town website
 const fetchParkingSpaces = () => {
 const url = 'https://citymaps.capetown.gov.za/agsext1/rest/services/Theme_Based/Open_Data_Service/FeatureServer/147/query?where=1%3D1&outFields=*&outSR=4326&f=json';
 fetch(url)
@@ -169,7 +183,6 @@ fetch(url)
         const features = data.features;
         const parkingLocations = [];
 
-        console.log("The size of the data feature is ", features.length)
         // Iterate through each parking space
         for (let i = 0; i < features.length; i++) {
             const parkingLocation = {
@@ -256,15 +269,6 @@ parkingLocations.forEach(parkingLocation => {
     }
 });
 
-// Log the results after calculating the shortest distance
-console.log('searchLatitude = ', userLocation.latitude, 'searchLongitude = ', userLocation.longitude);
-if (nearestParkingSpace) {
-    console.log('Shortest distance to nearest parking space:', shortestDistance, 'km');
-    console.log('Nearest parking space:', nearestParkingSpace);
-} else {
-    console.log('No nearest parking space found.');
-}
-
 return { shortestDistance, nearestParkingSpace };
 }
 // Function to draw a polyline on the map
@@ -272,7 +276,7 @@ return { shortestDistance, nearestParkingSpace };
 let polyline;
 const drawPolyline = (start, end) => {
 // Fetch the encoded polyline from HERE API
-fetch(`https://router.hereapi.com/v8/routes?origin=${start.latitude},${start.longitude}&transportMode=car&destination=${end.latitude},${end.longitude};sideOfStreetHint=${start.latitude},${start.longitude}&return=polyline,summary&apikey=${apiKeyGeo}`)
+fetch(`https://router.hereapi.com/v8/routes?origin=${start.latitude},${start.longitude}&transportMode=car&destination=${end.latitude},${end.longitude};sideOfStreetHint=${start.latitude},${start.longitude}&return=polyline,summary&apikey=${hereKey}`)
 .then(function(response) {
     return response.json();
 })
@@ -314,6 +318,25 @@ fetch(`https://router.hereapi.com/v8/routes?origin=${start.latitude},${start.lon
     console.error('Error fetching route:', error);
 });
 };
+// Event listener for search input change
+document.getElementById("searchInput").addEventListener("input", searchLocation);
+
+// Event listener for search button click
+document.getElementById("searchButton").addEventListener("click", displayGeoLocation);
+
+// Event listeners to change map style
+document.getElementById("here-explore").addEventListener("click", () => {
+  map.setStyle(`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/Here-explore/style-descriptor?key=${awsKey}`);
+});
+
+document.getElementById("here-imagery").addEventListener("click", () => {
+  map.setStyle(`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/HERE-imagery/style-descriptor?key=${awsKey}`);
+});
+
+document.getElementById("here-hybrid-imagery").addEventListener("click", () => {
+  map.setStyle(`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/HERE-hybrid-imagery/style-descriptor?key=${awsKey}`);
+});
+// Below is the code taken from github in decoding the polyline hence the copyright
 /*
 * Copyright (C) 2019 HERE Europe B.V.
 * Licensed under MIT, see full license in LICENSE
@@ -507,25 +530,6 @@ if (negative) {
 
 return encodeUnsignedNumber(numVal);
 }
-  // Event listener for search input change
-  document.getElementById("searchInput").addEventListener("input", searchLocation);
-
-  // Event listener for search button click
-  document.getElementById("searchButton").addEventListener("click", displayGeoLocation);
-
-  // Event listeners to change map style
-  document.getElementById("here-explore").addEventListener("click", () => {
-    map.setStyle(`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/Here-explore/style-descriptor?key=${apiKey}`);
-  });
-
-  document.getElementById("here-imagery").addEventListener("click", () => {
-    map.setStyle(`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/HERE-imagery/style-descriptor?key=${apiKey}`);
-  });
-
-  document.getElementById("here-hybrid-imagery").addEventListener("click", () => {
-    map.setStyle(`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/HERE-hybrid-imagery/style-descriptor?key=${apiKey}`);
-  });
-
   // Call setupMap function to initialize the map
   setupMap();
 });
