@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   let awsKey;
   let hereKey;
   
-  alert("Parking lots are available in Cape Town; other locations will be available soon.");
+  //alert("Parking lots are available in Cape Town; other locations will be available soon.");
   //fetch the api key from back-end for security
   try {
 
