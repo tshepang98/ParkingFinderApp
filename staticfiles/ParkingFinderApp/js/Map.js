@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", async function() {
   let awsKey;
   let hereKey;
   
-  alert("Only available in cape town")
+  alert("Parking lots are available in Cape Town; other locations will be available soon.");
   //fetch the api key from back-end for security
   try {
 
-      const response = await fetch("api/apiKeys/");
+      const response = await fetch("/api/keys/");
       if (!response.ok) {
           throw new Error('Network response was not ok ' + response.statusText);
       }

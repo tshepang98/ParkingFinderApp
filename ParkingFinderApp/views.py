@@ -2,10 +2,12 @@
 
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views import View
+
 
 def index(request):
  
-    return render(request, "ParkingFinderApp/Map.html")
+    return render(request, "ParkingFinderApp/Home.html")
 
 def apiKeys(request):
     data = {
@@ -14,3 +16,8 @@ def apiKeys(request):
     }
     
     return JsonResponse(data)
+class MapView(View):
+    def get(self, request):
+        return render(request, 'ParkingFinderApp/Map.html')  # Render Map.html template
+# ParkingFinderApp/views.py
+

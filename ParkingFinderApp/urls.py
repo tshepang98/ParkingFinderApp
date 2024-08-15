@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),  # URL pattern for rendering the HTML page with the map
-    path('api/apiKeys/', views.apiKeys, name='apiKeys'),  # Endpoint for fetching API keys
+    path('', views.index, name='home'),  # Root URL
+    path('api/keys/', views.apiKeys, name='apiKeys'),  # API keys endpoint
+    path('map/', views.MapView.as_view(), name='map'),  # Map view
 ]

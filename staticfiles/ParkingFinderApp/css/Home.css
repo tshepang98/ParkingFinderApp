@@ -1,0 +1,76 @@
+/* Ensure full viewport height and width for video background */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+/* Style the video to cover the entire background */
+#bg-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    filter: brightness(60%); /* Reduce brightness */
+}
+
+/* Apply the "Poppins" font family */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Style the content container */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #fff;
+    text-align: center;
+    padding: 0 20px;
+}
+
+/* Main header styling */
+h1 {
+    font-size: 3rem; /* Large font size for impact */
+    font-weight: 700; /* Bold font weight */
+    margin-bottom: 20px; /* Margin for spacing */
+    letter-spacing: 1px; /* Slight letter spacing */
+}
+
+/* Subheader styling */
+h3 {
+    font-size: 2rem; /* Large font size for readability */
+    font-weight: 300; /* Lighter font weight for contrast */
+    margin-bottom: 40px; /* Margin for spacing */
+    letter-spacing: 0.5px; /* Slight letter spacing */
+    line-height: 1.4; /* Line height for readability */
+}
+
+/* Button styling */
+.button {
+    font-size: 1.8rem; /* Larger font size */
+    font-weight: 600; /* Semi-bold font weight */
+    background-color: #007bff; /* Blue button color */
+    color: #fff;
+    padding: 15px 30px; /* Padding for better clickability */
+    border-radius: 10px; /* Rounded corners */
+    text-decoration: none;
+    text-transform: uppercase; /* Uppercase text for emphasis */
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow effect on hover */
+}

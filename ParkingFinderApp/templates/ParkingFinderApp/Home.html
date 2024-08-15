@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'ParkingFinderApp/css/home.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop id="bg-video">
+            <source src="{% static 'ParkingFinderApp/video/video.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+    <div class="content">
+        <h1>Welcome to the Parking Finder App</h1>
+        <h3>Your solution for finding parking spots easily!</h3>
+        <main>
+            <a href="{% url 'map' %}" class="button">Click here</a>
+        </main>
+    </div>
+</body>
+</html>
