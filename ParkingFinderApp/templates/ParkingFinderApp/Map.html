@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Interactive Map</title>
+ <link href="https://unpkg.com/maplibre-gl@3.x/dist/maplibre-gl.css" rel="stylesheet">
+ <!-- Include custom CSS -->
+ <link href="{% static 'ParkingFinderApp/css/Map.css' %}" rel="stylesheet">
+ 
+</head>
+<body>
+ <div id="map"></div>
+ <div class="search-bar">
+   <input id="searchInput" class="search-input" type="text" placeholder="Enter a location">
+   <button id="searchButton" class="search-button">Search</button>
+   <div id="autocomplete" class="autocomplete"></div> <!-- Autocomplete dropdown menu -->
+ </div>
+ <div class="layer-control">
+   <div class="map-style" id="here-explore">
+     <img src="{% static 'ParkingFinderApp/image/here-explore.png' %}" alt="Here-explore">
+     <div class="text">Street</div>
+   </div>
+   <div class="map-style" id="here-imagery">
+     <img src="{% static 'ParkingFinderApp/image/satelite.png' %}" alt="HERE-imagery">
+     <div class="text">Satellite</div>
+   </div>
+   <div class="map-style" id="here-hybrid-imagery">
+     <img src="{% static 'ParkingFinderApp/image/hybrid.png' %}" alt="HERE-hybrid-imagery">
+     <div class="text">Hybrid</div>
+   </div>
+ </div>
+ <script src="https://unpkg.com/maplibre-gl@3.x/dist/maplibre-gl.js"></script>
+ <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+ <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+ <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+ <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+ <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
+ <script src = "{% static 'ParkingFinderApp/js/Map.js' %}"></script>
+</body>
+</html>
